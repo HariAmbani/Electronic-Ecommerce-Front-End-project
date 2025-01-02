@@ -10,7 +10,7 @@ const AdminPage = () => {
     <div>
       <h1 style={{display:"flex" , justifyContent:"center"}}>Admin Page</h1>
       <ProductCreator />
-      <h2>Product List</h2>
+      <h2>Product Manager</h2>
       <ProductTable products={products} />
     </div>
   );
