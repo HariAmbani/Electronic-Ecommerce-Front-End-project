@@ -12,21 +12,21 @@ const ProductTable = ({ products }) => {
 
   const showEditModal = (product) => {
     setCurrentProduct(product);
-    setNewName(product.name);
-    setNewFeatures(product.features.join(', '));
-    setNewPrice(product.price);
+    setNewName(product.productName);
+    setNewFeatures(product.productFeatures);
+    setNewPrice(product.productPrice);
     setIsModalVisible(true);
   };
 
   const handleOk = () => {
     setProducts((prevProducts) =>
       prevProducts.map((product) =>
-        product.name === currentProduct.name
+        product.productName === currentProduct.productName
           ? {
               ...product,
-              name: newName,
-              features: newFeatures.split(',').map((feature) => feature.trim()),
-              price: newPrice,
+              productName: newName,
+              productFeatures: newFeatures,
+              productPrice: newPrice,
             }
           : product
       )
@@ -44,7 +44,7 @@ const ProductTable = ({ products }) => {
 
   const deleteProduct = (productName) => {
     setProducts((prevProducts) =>
-      prevProducts.filter((product) => product.name !== productName)
+      prevProducts.filter((product) => product.productName !== productName)
     );
     notification.success({
       message: 'Product Deleted',
@@ -55,8 +55,8 @@ const ProductTable = ({ products }) => {
   const columns = [
     {
       title: 'Image',
-      dataIndex: 'image',
-      key: 'image',
+      dataIndex: 'productImage',
+      key: 'productImage',
       render: (text) => (
         <Image
           src={text}
@@ -70,28 +70,26 @@ const ProductTable = ({ products }) => {
     },
     {
       title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'productName',
+      key: 'productName',
     },
     {
       title: 'Features',
-      dataIndex: 'features',
-      key: 'features',
+      dataIndex: 'productFeatures',
+      key: 'productFeatures',
       render: (features) => {
-        if (!Array.isArray(features) || features.length === 0) {
-          return 'No features available'; 
-        }
-        return features.map((feature, index) => (
+        if (!features) return 'No features';
+        return features.split(',').map((f, index) => (
           <span key={index} style={{ display: 'block' }}>
-            - {feature}
+            - {f.trim()}
           </span>
         ));
       },
     },
     {
       title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
+      dataIndex: 'productPrice',
+      key: 'productPrice',
       render: (text) => `₹${text}`,
     },
     {
@@ -109,7 +107,7 @@ const ProductTable = ({ products }) => {
           <Button
             type="primary"
             danger
-            onClick={() => deleteProduct(record.name)}
+            onClick={() => deleteProduct(record.productName)}
           >
             Delete Product
           </Button>
@@ -123,12 +121,11 @@ const ProductTable = ({ products }) => {
       <Table
         columns={columns}
         dataSource={products}
-        rowKey="name"
+        rowKey="productName"
         bordered
         pagination={{ pageSize: 4 }}
         style={{ marginTop: '20px' }}
       />
-
       <Modal
         title="Edit Product"
         visible={isModalVisible}

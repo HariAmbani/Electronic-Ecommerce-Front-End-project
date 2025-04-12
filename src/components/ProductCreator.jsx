@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { ProductsContext } from '../Data/ProductDetails';
 import { Form, Input, InputNumber, Button, notification, Modal, Row, Col, Image } from 'antd';
+import { CreateProductInDB } from '../DBoperations/ProductDBoperations';
 
 // Import images directly
 import productimage1 from "../assets/product 1 samsung phone.jpg";
@@ -72,6 +73,7 @@ const ProductCreator = () => {
     };
 
     addProduct(newProduct);
+    CreateProductInDB();
     notification.success({
       message: 'Product Added',
       description: `${newProduct.name} has been added successfully!`,
@@ -79,6 +81,7 @@ const ProductCreator = () => {
 
     form.resetFields();
     setSelectedImage(''); // Reset image selection
+    CreateProductInDB()
   };
 
   return (

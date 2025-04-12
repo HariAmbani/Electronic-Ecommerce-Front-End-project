@@ -1,11 +1,38 @@
 import React from 'react';
 import { Button, Checkbox, Form, Input } from 'antd';
-const onFinish = (values) => {
-  console.log('Success:', values);
+
+const onFinish = async (values) => {
+  try {
+    const response = await fetch("http://localhost:3015/users/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+
+    const text = await response.text();
+
+    if (response.ok) {
+      alert(`${values.username} your account has been successfully created`);
+      console.log("Server response:", text);
+    } else {
+      alert("Failed to create user");
+      console.error("Server error:", text);
+    }
+
+    console.log("Success:", values);
+  } catch (error) {
+    alert("Error while creating user : ",error);
+    console.error("Fetch error:", error);
+  }
 };
+
+
 const onFinishFailed = (errorInfo) => {
   console.log('Failed:', errorInfo);
 };
+
 const SignupForm = () => (
   <Form
     name="basic"
