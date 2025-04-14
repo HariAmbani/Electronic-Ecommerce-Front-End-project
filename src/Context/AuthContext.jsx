@@ -7,26 +7,37 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorageState);
   const [userData, setUserData] = useState({
     fullname: localStorage.getItem('fullname') || '',
+    username: localStorage.getItem('username') || '',
+    email: localStorage.getItem('email') || '',
+    phone: localStorage.getItem('phone') || '',
+    state: localStorage.getItem('state') || '',
     role: localStorage.getItem('role') || ''
   });
 
   const login = (user) => {
     localStorage.setItem('isLoggedIn', true);
-    localStorage.setItem('fullname', user.fullname);
-    localStorage.setItem('role', user.role);
-    setUserData({
-      fullname: user.fullname,
-      role: user.role,
+    Object.entries(user).forEach(([key, value]) => {
+      localStorage.setItem(key, value);
     });
+    setUserData(user);
     setIsLoggedIn(true);
   };
+  
 
   const logout = () => {
-    localStorage.setItem('isLoggedIn', false);
-    localStorage.removeItem('fullname');
-    localStorage.removeItem('role');
+    // Clear all specific user details from localStorage
+    const keysToRemove = ['isLoggedIn', 'fullname', 'username', 'email', 'phone', 'state', 'role'];
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+  
+    setUserData({
+      fullname: '',
+      username: '',
+      email: '',
+      phone: '',
+      state: '',
+      role: ''
+    });
     setIsLoggedIn(false);
-    setUserData({ fullname: '', role: '' });
   };
 
   return (
