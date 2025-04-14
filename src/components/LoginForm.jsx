@@ -6,16 +6,27 @@ const LoginForm = () => {
   const { login } = useContext(AuthContext);
   const [error, setError] = useState('');
 
-  const onFinish = (values) => {
-    // Clear previous error
-    setError('');
-
+  const onFinish = async(values) => {
     // Validate credentials
-    if (values.username === "admin" && values.password === "admin") {
-      login();
+    const response = await fetch("http://localhost:3015/users/login", 
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json",
+        },
+        body:JSON.stringify(values)
+      }
+    ) 
+
+    if(response.ok) {
+      const token = await response.json();
+      localStorage.setItem('token', token); // Store token
+      login(); // Assuming this updates context
     } else {
-      setError('Invalid Credentials');
+      alert("Invalid credentials, check username and password");
     }
+    
+    
     console.log('Success:', values);
   };
 
