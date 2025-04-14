@@ -6,29 +6,26 @@ const LoginForm = () => {
   const { login } = useContext(AuthContext);
   const [error, setError] = useState('');
 
-  const onFinish = async(values) => {
-    // Validate credentials
-    const response = await fetch("http://localhost:3015/users/login", 
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json",
-        },
-        body:JSON.stringify(values)
-      }
-    ) 
-
-    if(response.ok) {
-      const token = await response.json();
+  const onFinish = async (values) => {
+    const response = await fetch("http://localhost:3015/users/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+  
+    if (response.ok) {
+      const { token, user } = await response.json(); // Get user data from response
       localStorage.setItem('token', token); // Store token
-      login(); // Assuming this updates context
+      localStorage.setItem('fullname', user.fullname); // Store fullname
+      localStorage.setItem('role', user.role); // Store role
+      login(user); // Assuming this updates context
     } else {
       alert("Invalid credentials, check username and password");
     }
-    
-    
-    console.log('Success:', values);
   };
+  
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);

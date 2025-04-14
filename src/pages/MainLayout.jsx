@@ -1,8 +1,14 @@
 import { Avatar, Button, Image, Layout, Menu } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
-import logo from "../assets/file.png";
-import { UserOutlined, HomeOutlined, ShoppingCartOutlined, DropboxOutlined, QuestionCircleFilled } from "@ant-design/icons";
+import logo from "../assets/logotwo.png";
+import {
+  UserOutlined,
+  HomeOutlined,
+  ShoppingCartOutlined,
+  DropboxOutlined,
+  QuestionCircleFilled,
+} from "@ant-design/icons";
 import { Link, Route, Routes } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import { useContext, useState } from "react";
@@ -11,13 +17,15 @@ import HomePage from "./HomePage";
 import CartPage from "./CartPage";
 import OrderPage from "./OrderPage";
 import AdminPage from "./AdminPage";
-import ProductsProvider from "../Data/ProductDetails"
+import ProductsProvider from "../Data/ProductDetails";
 import HelpPage from "./HelpPage";
 
 function MainLayout({ cartItems, setCartItems }) {
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  const { userData, isLoggedIn, logout } = useContext(AuthContext);
   const [collapsed, setCollapsed] = useState(false); // State to track Sider collapse
   const [orderItems, setOrderItems] = useState([]); // State for orders
+
+  const { fullname, role } = userData;
 
   return isLoggedIn ? (
     <Layout style={{ height: "100vh" }}>
@@ -30,10 +38,63 @@ function MainLayout({ cartItems, setCartItems }) {
           alignItems: "center",
         }}
       >
-        <Image width="100px" src={logo} preview={false} />
+        <Image width="75px" src={logo} preview={false} />
         <h1 style={{ margin: 0 }}>Electronics Ecommerce Website</h1>
-        <div style={{ display: "flex", gap: "30px", alignItems: "center" }}>
-          <Avatar size={48} icon={<UserOutlined />} style={{ margin: "8px" }} />
+
+        <div
+          style={{
+            display: "flex",
+            gap: "30px",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          {/* Custom Circle with First Letter */}
+          <div
+            className="hover-target"
+            style={{
+              width: "48px",
+              height: "48px",
+              borderRadius: "50%",
+              backgroundColor: "#1677ff", // Soft blue
+              color: "#fff",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "22px",
+              fontWeight: 600,
+              cursor: "pointer",
+              position: "relative",
+            }}
+          >
+            {fullname ? fullname[0].toUpperCase() : "U"}
+
+            {/* Hover Content: Full Name and Role */}
+            <div
+              style={{
+                position: "absolute",
+                left: "-220px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                backgroundColor: "#ffffff",
+                color: "#333",
+                padding: "8px 12px",
+                borderRadius: "8px",
+                boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+                fontSize: "14px",
+                fontWeight: "500",
+                whiteSpace: "nowrap",
+                opacity: 0,
+                visibility: "hidden",
+                transition: "opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease",
+                zIndex: 10,
+              }}
+              className="hover-info"
+            >
+              {fullname} — {role}
+            </div>
+          </div>
+
           <Button type="primary" danger onClick={logout}>
             Logout
           </Button>
@@ -41,6 +102,7 @@ function MainLayout({ cartItems, setCartItems }) {
       </Header>
 
       {/* Main Content Area */}
+
       <Layout>
         {/* Sider */}
         <Sider

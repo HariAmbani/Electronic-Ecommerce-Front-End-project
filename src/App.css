@@ -28,6 +28,17 @@
   color: #61dafb;
 }
 
+.hover-info {
+  pointer-events: none;
+}
+
+.hover-target:hover .hover-info {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(-50%) translateX(5px); /* slight slide-in */
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
