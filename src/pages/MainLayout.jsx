@@ -116,8 +116,8 @@ function MainLayout({ cartItems, setCartItems }) {
 
 
 
-                    {/* Details Dropdown (on click) */}
-                    {showDetails && (
+          {/* Details Dropdown (on click) */}
+          {showDetails && (
             <div
               style={{
                 position: "absolute",
@@ -148,8 +148,8 @@ function MainLayout({ cartItems, setCartItems }) {
           </Button>
         </div>
       </Header>
+      
       {/* Main Content Area */}
-
       <Layout>
         {/* Sider */}
         <Sider
@@ -164,9 +164,11 @@ function MainLayout({ cartItems, setCartItems }) {
             <Menu.Item key="1" icon={<HomeOutlined style={{ fontSize: "18px" }} />}>
               <Link to="/">Home</Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<UserOutlined style={{ fontSize: "18px" }} />}>
-              <Link to="/admin">Admin</Link>
-            </Menu.Item>
+            {role === "admin" && (
+              <Menu.Item key="2" icon={<UserOutlined style={{ fontSize: "18px" }} />}>
+                <Link to="/admin">Admin</Link>
+              </Menu.Item>
+            )}
             <Menu.Item key="3" icon={<ShoppingCartOutlined style={{ fontSize: "18px" }} />}>
               <Link to="/cart">Your Cart</Link>
             </Menu.Item>
@@ -204,7 +206,16 @@ function MainLayout({ cartItems, setCartItems }) {
             />
             <Route
               path="/admin"
-              element={<AdminPage />} />
+              element={
+                role === "admin" ? (
+                  <AdminPage />
+                ) : (
+                  <div style={{ padding: "40px", textAlign: "center", fontSize: "24px", color: "red" }}>
+                    Need admin access to access this page.
+                  </div>
+                )
+              }
+            />
             <Route
               path="/cart"
               element={<CartPage cartItems={cartItems} setCartItems={setCartItems} setOrderItems={setOrderItems} />}

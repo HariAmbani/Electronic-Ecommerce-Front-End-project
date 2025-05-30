@@ -3,21 +3,22 @@ import { createContext, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const localStorageState = localStorage.getItem('isLoggedIn') === 'true' ? true : false;
-  const [isLoggedIn, setIsLoggedIn] = useState(localStorageState);
+  const sessionStorageState = sessionStorage.getItem('isLoggedIn') === 'true' ? true : false;
+  const [isLoggedIn, setIsLoggedIn] = useState(sessionStorageState);
   const [userData, setUserData] = useState({
-    fullname: localStorage.getItem('fullname') || '',
-    username: localStorage.getItem('username') || '',
-    email: localStorage.getItem('email') || '',
-    phone: localStorage.getItem('phone') || '',
-    state: localStorage.getItem('state') || '',
-    role: localStorage.getItem('role') || ''
+    fullname: sessionStorage.getItem('fullname') || '',
+    username: sessionStorage.getItem('username') || '',
+    email: sessionStorage.getItem('email') || '',
+    phone: sessionStorage.getItem('phone') || '',
+    state: sessionStorage.getItem('state') || '',
+    role: sessionStorage.getItem('role') || ''
   });
 
   const login = (user) => {
-    localStorage.setItem('isLoggedIn', true);
+    sessionStorage.setItem('isLoggedIn', true);
+      
     Object.entries(user).forEach(([key, value]) => {
-      localStorage.setItem(key, value);
+      sessionStorage.setItem(key, value);
     });
     setUserData(user);
     setIsLoggedIn(true);
@@ -27,7 +28,8 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     // Clear all specific user details from localStorage
     const keysToRemove = ['isLoggedIn', 'fullname', 'username', 'email', 'phone', 'state', 'role'];
-    keysToRemove.forEach(key => localStorage.removeItem(key));
+    sessionStorage.removeItem("token")
+    keysToRemove.forEach(key => sessionStorage.removeItem(key));
   
     setUserData({
       fullname: '',
@@ -35,7 +37,8 @@ export const AuthProvider = ({ children }) => {
       email: '',
       phone: '',
       state: '',
-      role: ''
+      role: '',
+      token:''
     });
     setIsLoggedIn(false);
   };

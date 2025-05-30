@@ -17,8 +17,9 @@ const onFinish = async (values) => {
 
   if (response.ok) {
     const { token, user } = await response.json(); // Get user data from response
+      sessionStorage.setItem("token", token)
     Object.entries(user).forEach(([key, value]) => {
-      localStorage.setItem(key, value);
+      sessionStorage.setItem(key, value);
     });
     login(user); // Assuming this updates context
   } else {

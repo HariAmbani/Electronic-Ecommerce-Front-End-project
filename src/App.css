@@ -38,6 +38,12 @@
   transform: translateY(-50%) translateX(5px); /* slight slide-in */
 }
 
+.dark-placeholder::placeholder {
+  color: #000000 !important;
+  opacity: 1; /* Ensure it's visible */
+}
+
+
 
 @keyframes App-logo-spin {
   from {

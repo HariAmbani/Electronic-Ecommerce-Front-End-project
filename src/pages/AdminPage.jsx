@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import ProductCreator from '../components/ProductCreator';
+import ProductCreator from '../components/productCreatorN';
 import ProductTable from '../components/ProductTable';
 import { ProductsContext } from '../Data/ProductDetails';
 
