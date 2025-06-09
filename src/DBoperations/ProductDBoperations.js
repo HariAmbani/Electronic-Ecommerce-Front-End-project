@@ -127,6 +127,71 @@ export const getUserCart = async (username) => {
   }
 };
 
+// POST /order/create
+export async function PlaceOrder(username, productId) {
+  try {
+    const res = await fetch("http://localhost:3015/orders/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, productId }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Server responded with ${res.status}: ${errorText}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Order creation failed:", err);
+    throw err;
+  }
+}
+
+// DELETE /order/delete
+// Change to POST
+export async function CancelOrder(username, orderId) {
+  try {
+    const res = await fetch("http://localhost:3015/orders/delete", {
+      method: "POST", // <-- change here
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, orderId }),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Server responded with ${res.status}: ${errorText}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (err) {
+    console.error("Failed to cancel order:", err);
+    throw err;
+  }
+}
+
+// GET /order/userorders/:username
+export async function GetUserOrders(username) {
+  try {
+    const res = await fetch(`http://localhost:3015/orders/userorders/${username}`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch orders");
+    }
+
+    const orderData = await res.json();
+    return orderData;
+  } catch (err) {
+    console.error("Error fetching user orders:", err);
+    return [];
+  }
+}
+
 
 
 

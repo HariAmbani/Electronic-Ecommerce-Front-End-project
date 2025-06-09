@@ -1,14 +1,26 @@
 // pages/CartPage.js
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, notification, Empty } from 'antd';
+import { Row, Col, Typography, notification, Empty, Modal } from 'antd';
 import CartCard from '../components/CartCard';
-import { getUserCart, RemoveFromCart } from '../DBoperations/ProductDBoperations';
+import { getUserCart, RemoveFromCart, PlaceOrder, GetUserOrders } from '../DBoperations/ProductDBoperations';
 
 const { Title } = Typography;
 
 const CartPage = ({ username: propsUsername, setOrderItems }) => {
     const [username, setUsername] = useState(propsUsername || sessionStorage.getItem("username"));
     const [cartItems, setCartItems] = useState([]);
+
+    const [userOrders, setUserOrders] = useState([]);
+    
+    useEffect(() => {
+    const fetchOrders = async () => {
+        if (username) {
+        const orders = await GetUserOrders(username);
+        setUserOrders(orders);
+        }
+    };
+    fetchOrders();
+    }, [username]);
 
     useEffect(() => {
         if (!username) {
@@ -40,14 +52,62 @@ const CartPage = ({ username: propsUsername, setOrderItems }) => {
         }
     };
 
-    const handleBuyNow = (product) => {
-        setOrderItems([product]);
-        notification.success({
+const handleBuyNow = async (product) => {
+  if (!username) {
+    alert("Please login first!");
+    return;
+  }
+
+  const alreadyOrdered = userOrders.find(
+    (order) =>
+      order.productId === product.productId &&
+      (order.status === "Pending" || order.status === "Shipping")
+  );
+
+  if (alreadyOrdered) {
+    Modal.confirm({
+      title: "Product Already Ordered",
+      content: `${product.name} has already been ordered recently and is currently "${alreadyOrdered.status}". Do you still want to order it again?`,
+      okText: "Proceed with Order",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          const res = await PlaceOrder(username, product.productId);
+          setOrderItems((prev) => [...prev, product]);
+          notification.success({
             message: "Order Placed",
-            description: "Your order has been placed successfully!",
+            description: `${product.name} has been ordered successfully!`,
             placement: "topRight",
-        });
-    };
+          });
+        } catch (error) {
+          console.error("❌ Order failed:", error);
+          notification.error({
+            message: "Order Failed",
+            description: error.message || "Could not place the order.",
+          });
+        }
+      },
+    });
+    return;
+  }
+
+  // Normal order flow if no duplicate
+  try {
+    const res = await PlaceOrder(username, product.productId);
+    setOrderItems((prev) => [...prev, product]);
+    notification.success({
+      message: "Order Placed",
+      description: `${product.name} has been ordered successfully!`,
+      placement: "topRight",
+    });
+  } catch (error) {
+    console.error("❌ Order failed:", error);
+    notification.error({
+      message: "Order Failed",
+      description: error.message || "Could not place the order.",
+    });
+  }
+};
 
     return (
         <div style={{ padding: "24px" }}>
