@@ -1,11 +1,12 @@
 import React from "react";
 import { Table, Button, Typography } from "antd";
 import moment from "moment";
-import { CloseCircleOutlined } from "@ant-design/icons";
+import { CloseCircleOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
 const OrderCard = ({ product, setOrderItems }) => {
+  console.log("OrderCard product:", product);  // ✅ Add here
   const handleCancelOrder = () => {
     setOrderItems((prevItems) => prevItems.filter(item => item.name !== product.name));
   };
@@ -62,7 +63,7 @@ const OrderCard = ({ product, setOrderItems }) => {
   const data = [
     {
       key: product.name,
-      image: product.image,
+      image: `http://localhost:3015/productPictures/${product.filename}`,
       name: product.name,
       deliveryDate,
     },

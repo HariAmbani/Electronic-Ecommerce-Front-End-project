@@ -78,7 +78,7 @@ const OrderPage = ({ orderItems, setOrderItems }) => {
 
   const data = orderItems.map((product, index) => ({
     key: index,
-    image: product.image,
+    image: `http://localhost:3015/productPictures/${product.filename}`,
     name: product.name,
     deliveryDate: moment().add(2, "days").format("MMM Do YYYY"),
   }));

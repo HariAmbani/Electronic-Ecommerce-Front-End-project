@@ -15,7 +15,7 @@ const OrderCard = ({ product, setOrderItems }) => {
 
   return (
     <Card hoverable style={{ width: 300, margin: "16px auto", textAlign: "center" }}>
-      <img src={product.image} alt={product.name} style={{ height: 150, objectFit: "contain" }} />
+      <img src={`http://localhost:3015/productPictures/${product.filename}`} alt={product.name} style={{ height: 150, objectFit: "contain" }} />
       <Card.Meta
         title={product.name}
         description={

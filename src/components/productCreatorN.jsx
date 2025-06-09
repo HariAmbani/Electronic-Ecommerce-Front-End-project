@@ -12,33 +12,35 @@ const ProductCreator = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
 
-  const handleSubmit = async (values) => {
-    if (fileList.length === 0) {
-      notification.error({
-        message: 'Upload Required',
-        description: 'Please upload a product image before submitting.'
-      });
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('name', values.name);
-    formData.append('features', JSON.stringify(values.features.split(',').map(f => f.trim())));
-    formData.append('price', values.price);
-    formData.append('filename', fileList[0].originFileObj.name);
-    formData.append('file', fileList[0].originFileObj);
-
-    addProduct(formData);
-    await CreateProductInDB(formData);
-
-    notification.success({
-      message: 'Product Added',
-      description: `${values.name} has been added successfully!`,
+const handleSubmit = async (values) => {
+  if (fileList.length === 0) {
+    notification.error({
+      message: 'Upload Required',
+      description: 'Please upload a product image before submitting.'
     });
+    return;
+  }
 
-    form.resetFields();
-    setFileList([]);
-  };
+  const formData = new FormData();
+  formData.append('name', values.name);
+  formData.append('features', JSON.stringify(values.features.split(',').map(f => f.trim())));
+  formData.append('price', values.price);
+  formData.append('filename', fileList[0].originFileObj.name);
+  formData.append('file', fileList[0].originFileObj);
+
+  addProduct(formData); // optional context call
+  await CreateProductInDB(formData);
+
+  notification.success({
+    message: 'Product Added',
+    description: `${values.name} has been added successfully!`,
+  });
+
+  form.resetFields();
+  setFileList([]);
+  window.location.reload();
+};
+
 
   const handleUpload = ({ fileList: newFileList }) => {
     setFileList(newFileList);
